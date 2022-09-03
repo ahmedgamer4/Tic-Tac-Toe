@@ -1,42 +1,46 @@
+const Players = (name, symbol) => {
+    return {name, symbol}
+}
+
+const player1 = Players('player1', 'X');
+const player2 = Players('player2', 'O');
+
 
 const Gameboard = (() => {
     const boxes = [...document.querySelectorAll('.box')];
-    let symbol = 'X';
+    const resetBtn = document.querySelector('.reset');
 
     const gameboard = [ 'X', '', '',
                         '', 'O', '',
                         '', 'O', '' ];
 
-    const display = () => {
-
+    const assign = () => {
         for (i = 0; i < 9; i++) {
-            boxes[i].textContent = gameboard[i];
+            gameboard[i] = boxes[i].textContent;
         }
     };
 
-    const fillBox = index => {
-        let box = gameboard[index];
-        if (box === "") {
-            box = symbol;
-        }
+    const changePlayer = () => {
+        let symbol = player1.symbol ? player2.symbol : player2.symbol;
+        return symbol;
     }
 
-    const changeSymbol = () => {
-        symbol = 'X' ? 'O' : 'X';
-    }
+    let symbol = changePlayer();
 
-    const applySymbol = () => {
+    function applySymbol() {
         for (i = 0; i < 9; i++) {
             let box = boxes[i];
-            let current = gameboard[i];
             box.addEventListener('click', () => {
-                if (box.textContent === ""){
+                if (box.textContent === "") {
                     box.textContent = symbol;
-                    current += symbol;
-                    console.log(gameboard[i]);
+                    assign();
+                    changePlayer();
                 }
-                // console.log(box);
-            });
+
+                if (checkWinCondition() === true) {
+                    alert('win');
+                }
+            }, { once: true });
         }
     }
 
@@ -57,37 +61,32 @@ const Gameboard = (() => {
         }
     };
 
-    const restart = () => {
-        boxes.forEach(box => box.textContent = '');
+    const reset = () => {
+        resetBtn.addEventListener('click', () => {
+            for (i = 0; i < 9; i++) {
+                gameboard[i] = '';
+                boxes[i].textContent = '';
+            }
+        });
     }
  
     const gameStart = () => {
         applySymbol();
 
         if (checkWinCondition() === false) {
-            restart();
+            reset();
         } 
 
         else if (!boxes.forEach(box === "")) {
-            restart();
+            reset();
         }
     }
 
     return {
-        display,
-        applySymbol,
-        gameStart,
-        gameboard
+        gameStart
     };
 
 })();
 
-const Players = () => {
-    let player1;
-    let player2;
-}
 
-
-Gameboard.display();
-// Gameboard.applySymbol();
 Gameboard.gameStart();
