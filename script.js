@@ -20,27 +20,43 @@ const Gameboard = (() => {
         }
     };
 
-    const changePlayer = () => {
-        let symbol = player1.symbol ? player2.symbol : player2.symbol;
-        return symbol;
+    const clear = () => {
+        for (i = 0; i < 9; i++) {
+            gameboard[i] = '';
+            boxes[i].textContent = '';
+        }
     }
 
-    let symbol = changePlayer();
+    let symbol = '';
+    let winner = '';
 
     function applySymbol() {
         for (i = 0; i < 9; i++) {
             let box = boxes[i];
-            box.addEventListener('click', () => {
+            box.addEventListener('click', e => {
+                if (symbol === '') {
+                    symbol = player1.symbol;
+                }
+                else if (symbol === player1.symbol) {
+                    symbol = player2.symbol;
+                    winner = player2.name;
+                }
+                else if (symbol === player2.symbol) {
+                    symbol = player1.symbol;
+                    winner = player1.name;
+                }
+
                 if (box.textContent === "") {
                     box.textContent = symbol;
                     assign();
-                    changePlayer();
                 }
 
+
                 if (checkWinCondition() === true) {
-                    alert('win');
+                    alert(`${winner} wins`);
+                    clear();
                 }
-            }, { once: true });
+            });
         }
     }
 
@@ -72,12 +88,9 @@ const Gameboard = (() => {
  
     const gameStart = () => {
         applySymbol();
+        reset()
 
         if (checkWinCondition() === false) {
-            reset();
-        } 
-
-        else if (!boxes.forEach(box === "")) {
             reset();
         }
     }
